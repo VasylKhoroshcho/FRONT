@@ -1,6 +1,8 @@
 .gallery__spinner {
   display: inline-block;
   position: relative;
+  left: calc(50% - 32px);
+  top: calc(50% - 32px);
   width: 64px;
   height: 64px;
 }

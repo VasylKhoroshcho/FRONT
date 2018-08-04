@@ -4,44 +4,37 @@ import PropTypes from "prop-types";
 import './Spiner.css';
 import './Gallery.css';
 
-import BluredBackground from '../BluredBackground/BluredBackground'
-
-function imagesLoaded(parentNode) {
-  const imgElements = [...parentNode.querySelectorAll("img")];
-  for (let i = 0; i < imgElements.length; i += 1) {
-    const img = imgElements[i];
-    if (!img.complete) {
-      return false;
-    }
-  }
-  return true;
-}
-
 class Gallery extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      drag: false
+      images: null
     };
   }
 
-  handleImageChange = () => {
-    this.setState({
-      loading: !imagesLoaded(this.galleryElement)
-    });
-  };
+  async componentDidMount() {
+    await fetch('http://127.0.0.1:1437/api/v1/images', {
+      method: 'GET',
+      crossDomain:true,
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => this.setState({ images: data }));
+
+    this.setState({ loading: false });
+  }
 
   renderSpinner() {
-    if (!this.state.loading) return null;
-
     return <div className="gallery__spinner"><div></div><div></div></div>;
   }
 
-  renderImage(imageUrls, drag) {
+  renderImage() {
     let columns = [[], [], [], []];
 
-    imageUrls.reduce((place, image) => {
+    this.state.images.reduce((place, image) => {
       let result = place + 1;
 
       columns[place].push(image);
@@ -51,42 +44,32 @@ class Gallery extends React.Component {
       return result;
     }, 0)
     return (
-      <div class="gallery__row">
-        <div class="gallery__column">
-          {columns[0].map(url => <img draggable="true" src={url} />)}
+      <div className="gallery__row">
+        <div className="gallery__column">
+          {columns[0].map(url => <img draggable="true" src={url.url} />)}
         </div>
-        <div class="gallery__column">
-          {columns[1].map(url => <img draggable="true" src={url} />)}
+        <div className="gallery__column">
+          {columns[1].map(url => <img draggable="true" src={url.url} />)}
         </div>
-        <div class="gallery__column">
-          {columns[2].map(url => <img draggable="true" src={url} />)}
+        <div className="gallery__column">
+          {columns[2].map(url => <img draggable="true" src={url.url} />)}
         </div>
-        <div class="gallery__column">
-          {columns[3].map(url => <img draggable="true" src={url} />)}
+        <div className="gallery__column">
+          {columns[3].map(url => <img draggable="true" src={url.url} />)}
         </div>
       </div>
     );
   }
 
   render() {
-    if (this.state.drag) {
-      var bluredBackground = <BluredBackground />
-    }
+    let images = this.state.loading ? this.renderSpinner() : this.renderImage();
 
     return (
-      <div
-        className="gallery"
-        ref={element => {
-          this.galleryElement = element;
-        }}
-      >
-        {this.renderImage(this.props.imageUrls, this.props.drag)}
-      {bluredBackground}
+      <div className="gallery">
+        {images}
       </div>
     );
   }
 }
-Gallery.propTypes = {
-  imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired
-};
+
 export default Gallery;
