@@ -8,3 +8,7 @@
 .trash img {
   width: 100px;
 }
+
+.trash.active {
+  opacity: 1;
+}

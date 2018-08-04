@@ -2,31 +2,49 @@ import React, { Component } from 'react';
 
 import './App.css';
 
-import Navbar from './components/Navbar/Navbar'
-import SidePanel from './components/Sidebar/SidePanel'
-import BluredBackground from './components/BluredBackground/BluredBackground'
-import Gallery from './components/Gallery/Gallery'
 import Trash from './components/Trash/Trash'
+import Navbar from './components/Navbar/Navbar'
+import Gallery from './components/Gallery/Gallery'
+import SidePanel from './components/Sidebar/SidePanel'
+import UploadModal from './components/UploadModal/UploadModal'
+import BluredBackground from './components/BluredBackground/BluredBackground'
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       sidebarOpen: false,
+      needRefresh: false,
       dragging: false
     };
   }
 
-  _toggleSidebarHandler () {
+  _toggleSidebarHandler() {
     this.setState(prevState => ({ sidebarOpen: !prevState.sidebarOpen }));
   }
 
-  _bluredBackgroundHandler () {
+  _bluredBackgroundHandler() {
     this.setState({ sidebarOpen: false });
   }
 
-  _dragHandler () {
-    this.setState({ dragging: true });
+  _dragToggler() {
+    this.setState(prevState => ({ dragging: !prevState.dragging }));
+  }
+
+  _dropHandler(e) {
+    fetch(`http://127.0.0.1:1437/api/v1/delete?id=${e.dataTransfer.getData("id")}`, {
+      method: 'PUT',
+      crossDomain:true,
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => this.setState({needRefresh: true}));
+  }
+
+  _changePageStatus() {
+    this.setState({needRefresh: false})
   }
 
   render() {
@@ -40,8 +58,13 @@ class App extends Component {
         <SidePanel show={this.state.sidebarOpen} />
         {bluredBackground}
         <main>
-          <Gallery drag={this._dragHandler.bind(this)}/>
-          <Trash />
+          <Gallery
+            dragToggler={this._dragToggler.bind(this)}
+            needRefresh={this.state.needRefresh}
+            changePageStatus={this._changePageStatus.bind(this)}
+          />
+          <Trash dragging={this.state.dragging} drop={this._dropHandler.bind(this)} />
+          <UploadModal />
         </main>
       </div>
     );

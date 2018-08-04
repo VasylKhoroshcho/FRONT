@@ -13,8 +13,12 @@ class Gallery extends React.Component {
     };
   }
 
-  async componentDidMount() {
-    await fetch('http://127.0.0.1:1437/api/v1/images', {
+  componentDidMount() {
+    this._fetchImages();
+  }
+
+  _fetchImages() {
+    fetch('http://127.0.0.1:1437/api/v1/images', {
       method: 'GET',
       crossDomain:true,
       headers: {
@@ -22,16 +26,21 @@ class Gallery extends React.Component {
       }
     })
     .then(response => response.json())
-    .then(data => this.setState({ images: data }));
-
-    this.setState({ loading: false });
+    .then(data => {
+      this.setState({ images: data })
+      this.setState({ loading: false });
+    });
   }
 
-  renderSpinner() {
+  _dragStart(e) {
+    e.dataTransfer.setData("id", e.target.dataset.id);
+  }
+
+  _renderSpinner() {
     return <div className="gallery__spinner"><div></div><div></div></div>;
   }
 
-  renderImage() {
+  _renderImages() {
     let columns = [[], [], [], []];
 
     this.state.images.reduce((place, image) => {
@@ -43,32 +52,35 @@ class Gallery extends React.Component {
 
       return result;
     }, 0)
+
     return (
       <div className="gallery__row">
-        <div className="gallery__column">
-          {columns[0].map(url => <img draggable="true" src={url.url} />)}
-        </div>
-        <div className="gallery__column">
-          {columns[1].map(url => <img draggable="true" src={url.url} />)}
-        </div>
-        <div className="gallery__column">
-          {columns[2].map(url => <img draggable="true" src={url.url} />)}
-        </div>
-        <div className="gallery__column">
-          {columns[3].map(url => <img draggable="true" src={url.url} />)}
-        </div>
+        {columns.map(column =>
+          <div className="gallery__column">
+            {column.map(img =>
+              <img
+                draggable="true"
+                data-id={img.id}
+                onDragStart={e => (this._dragStart(e), this.props.dragToggler())}
+                onDragEnd={e => this.props.dragToggler()}
+                src={img.url}
+              />
+            )}
+          </div>
+        )}
       </div>
     );
   }
 
   render() {
-    let images = this.state.loading ? this.renderSpinner() : this.renderImage();
+    let images = this.state.loading ? this._renderSpinner() : this._renderImages();
 
-    return (
-      <div className="gallery">
-        {images}
-      </div>
-    );
+    if(this.props.needRefresh) {
+      this._fetchImages();
+      this.props.changePageStatus();
+    }
+
+    return (<div className="gallery">{images}</div>);
   }
 }
 
