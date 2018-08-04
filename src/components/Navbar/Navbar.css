@@ -4,14 +4,15 @@
   width: 100%;
   height: 60px;
   position: fixed;
-  background-color: #26A69A;
+  background-color: #424242;
 }
 
-.navbar__logo a {
-  color: white;
+.navbar__logo {
   font-size: 1.5rem;
-  margin-left: 2rem;
-  text-decoration: none;
+}
+
+.navbar__logo img {
+  height: 45px;
 }
 
 .empty-space {

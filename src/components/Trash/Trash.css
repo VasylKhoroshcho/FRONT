@@ -1,0 +1,10 @@
+.trash {
+  bottom: 0;
+  right: 1rem;
+  opacity: 0.5;
+  position: fixed;
+}
+
+.trash img {
+  width: 100px;
+}
