@@ -17,8 +17,7 @@ class Gallery extends React.Component {
   }
 
   _fetchImages() {
-    console.log(process.env)
-    fetch(`http://${process.env.REACT_APP_URL}/api/v1/images`, {
+    fetch(`${process.env.REACT_APP_URL}/api/v1/images`, {
       method: 'GET',
       crossDomain:true,
       headers: {

@@ -9,9 +9,7 @@
     "react-scripts": "1.1.4"
   },
   "scripts": {
-    "start": "sudo chmod +x ddd.sh | sh ddd.sh",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "start": "sudo chmod +x heroku.sh | sh heroku.sh",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
