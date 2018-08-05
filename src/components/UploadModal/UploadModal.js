@@ -39,7 +39,7 @@ class UploadModal extends Component {
     body.append('file', this.state.file, 'img');
     body.append('name', this.state.name);
 
-    fetch('http://127.0.0.1:1437/api/v1/upload', {
+    fetch(`${process.env.api_url}/api/v1/upload`, {
       method: 'POST',
       crossDomain:true,
       body

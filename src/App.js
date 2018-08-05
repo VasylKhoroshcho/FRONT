@@ -31,7 +31,7 @@ class App extends Component {
   }
 
   _dropHandler(e) {
-    fetch(`http://127.0.0.1:1437/api/v1/delete?id=${e.dataTransfer.getData("id")}`, {
+    fetch(`${process.env.api_url}/api/v1/delete?id=${e.dataTransfer.getData("id")}`, {
       method: 'DELETE',
       crossDomain:true,
       headers: {

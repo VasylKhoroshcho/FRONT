@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import './Spiner.css';
 import './Gallery.css';
@@ -19,7 +18,7 @@ class Gallery extends React.Component {
 
   _fetchImages() {
     console.log(process.env)
-    fetch(`${process.env.api_url}/api/v1/images`, {
+    fetch(`http://${process.env.REACT_APP_URL}/api/v1/images`, {
       method: 'GET',
       crossDomain:true,
       headers: {
@@ -61,8 +60,9 @@ class Gallery extends React.Component {
             {column.map(img =>
               <img
                 draggable="true"
+                alt={img.name}
                 data-id={img.id}
-                onDragStart={e => (this._dragStart(e), this.props.dragToggler())}
+                onDragStart={e => { this._dragStart(e); this.props.dragToggler()}}
                 onDragEnd={e => this.props.dragToggler()}
                 src={img.url}
               />

@@ -5,9 +5,6 @@ import trashIcon from '../../trash.png';
 
 
 class Trash extends Component {
-  constructor(props) {
-    super(props);
-  }
   _allowDrop(e) {
     e.preventDefault();
   }
@@ -19,6 +16,7 @@ class Trash extends Component {
       <div className={classes}>
         <img
           src={trashIcon}
+          alt='icon'
           onDragOver={e => this._allowDrop(e)}
           onDrop={this.props.drop}
         />

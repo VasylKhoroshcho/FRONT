@@ -6,7 +6,7 @@ import logo from './logo.png'
 const Navbar = props => (
   <header className="navbar">
     <nav className="navbar__navigation">
-        <div className="navbar__logo"><a href="/"><img src={logo} /></a></div>
+        <div className="navbar__logo"><a href="/"><img src={logo} alt='logo' /></a></div>
         <div className="empty-space"></div>
         <div className="navbar_navigation-items">
             <ul>

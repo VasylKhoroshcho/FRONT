@@ -5,11 +5,11 @@ cache:
   directories:
   - node_modules
 script:
-  - npm run predeploy
+  - REACT_APP_URL=$API_URL npm run predeploy
 deploy:
-  provider: pages
+  provider: heroku
   skip_cleanup: true
-  github_token: $github_token
-  local_dir: build
+  api_key: $API_KEY
+  app: mev-gallery
   on:
     branch: master
