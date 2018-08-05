@@ -5,7 +5,6 @@ import './App.css';
 import Trash from './components/Trash/Trash'
 import Navbar from './components/Navbar/Navbar'
 import Gallery from './components/Gallery/Gallery'
-import SidePanel from './components/Sidebar/SidePanel'
 import UploadModal from './components/UploadModal/UploadModal'
 import BluredBackground from './components/BluredBackground/BluredBackground'
 
@@ -13,18 +12,18 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sidebarOpen: false,
+      modalOpen: false,
       needRefresh: false,
       dragging: false
     };
   }
 
   _toggleSidebarHandler() {
-    this.setState(prevState => ({ sidebarOpen: !prevState.sidebarOpen }));
+    this.setState(prevState => ({ modalOpen: !prevState.modalOpen }));
   }
 
   _bluredBackgroundHandler() {
-    this.setState({ sidebarOpen: false });
+    this.setState({ modalOpen: false });
   }
 
   _dragToggler() {
@@ -33,7 +32,7 @@ class App extends Component {
 
   _dropHandler(e) {
     fetch(`http://127.0.0.1:1437/api/v1/delete?id=${e.dataTransfer.getData("id")}`, {
-      method: 'PUT',
+      method: 'DELETE',
       crossDomain:true,
       headers: {
           'Content-Type': 'application/json'
@@ -48,14 +47,13 @@ class App extends Component {
   }
 
   render() {
-    if (this.state.sidebarOpen) {
+    if (this.state.modalOpen) {
       var bluredBackground = <BluredBackground  click={this._bluredBackgroundHandler.bind(this)} />
     }
 
     return (
       <div className="app">
         <Navbar hamburgerHandler={this._toggleSidebarHandler.bind(this)} />
-        <SidePanel show={this.state.sidebarOpen} />
         {bluredBackground}
         <main>
           <Gallery
@@ -64,7 +62,7 @@ class App extends Component {
             changePageStatus={this._changePageStatus.bind(this)}
           />
           <Trash dragging={this.state.dragging} drop={this._dropHandler.bind(this)} />
-          <UploadModal />
+          <UploadModal opened={this.state.modalOpen}/>
         </main>
       </div>
     );

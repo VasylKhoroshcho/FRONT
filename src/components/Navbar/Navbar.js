@@ -1,7 +1,5 @@
 import React from 'react';
 
-import ToggleButton from '../Sidebar/ToggleButton';
-
 import './Navbar.css';
 import logo from './logo.png'
 
@@ -12,12 +10,8 @@ const Navbar = props => (
         <div className="empty-space"></div>
         <div className="navbar_navigation-items">
             <ul>
-                <li><a href="/">Upload Image</a></li>
-                <li><a href="/">Categories</a></li>
+                <li><button onClick={props.hamburgerHandler}>Upload Image</button></li>
             </ul>
-        </div>
-        <div>
-            <ToggleButton click={props.hamburgerHandler} />
         </div>
     </nav>
   </header>
