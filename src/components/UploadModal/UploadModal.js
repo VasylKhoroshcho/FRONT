@@ -12,9 +12,9 @@ class UploadModal extends Component {
       fillMessage: false
     };
 
+    this._buttonHandler = this._buttonHandler.bind(this);
     this._handleFileInputChange = this._handleFileInputChange.bind(this);
     this._handleNameInputChange = this._handleNameInputChange.bind(this);
-    this._buttonHandler = this._buttonHandler.bind(this);
   }
 
   _handleFileInputChange(e) {
@@ -28,7 +28,7 @@ class UploadModal extends Component {
     this.setState({ fillMessage: false });
   }
 
-  async _buttonHandler() {
+  _buttonHandler() {
     const body  = new FormData();
     if(!this.state.name || !this.state.file) {
       this.setState({ fillMessage: true });
@@ -39,7 +39,7 @@ class UploadModal extends Component {
     body.append('file', this.state.file, 'img');
     body.append('name', this.state.name);
 
-    fetch(`${process.env.api_url}/api/v1/upload`, {
+    fetch(`${process.env.REACT_APP_URL}/api/v1/upload`, {
       method: 'POST',
       crossDomain:true,
       body
