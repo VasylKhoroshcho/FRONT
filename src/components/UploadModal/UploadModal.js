@@ -9,6 +9,7 @@ class UploadModal extends Component {
     this.state = {
       name: '',
       file: null,
+      uploading: false,
       fillMessage: false
     };
 
@@ -30,11 +31,14 @@ class UploadModal extends Component {
 
   _buttonHandler() {
     const body  = new FormData();
+
     if(!this.state.name || !this.state.file) {
       this.setState({ fillMessage: true });
 
       return;
     }
+
+    this.setState({ uploading: true })
 
     body.append('file', this.state.file, 'img');
     body.append('name', this.state.name);
@@ -45,13 +49,20 @@ class UploadModal extends Component {
       body
     })
     .then(response => response.json())
-    .then(data => alert('yep'));
+    .then(data => {
+      this.setState({ uploading: false })
+      this.props.close()
+    });
   }
 
   render() {
     let modalClasses = this.props.opened ? 'upload-modal open' : 'upload-modal';
 
     let messageClasses = this.state.fillMessage ? 'upload-modal__message active' : 'upload-modal__message';
+
+    let buttonClasses = this.state.uploading ? 'upload-form__button' : 'upload-form__button active';
+
+    let spinerClasses = this.state.uploading ? 'upload-modal__spinner active' : 'upload-modal__spinner';
 
     return (
       <div className={modalClasses}>
@@ -75,7 +86,8 @@ class UploadModal extends Component {
               />
           </div>
           <span className={messageClasses}>All fields are required</span>
-          <div className="upload-form__button">
+          <div className={spinerClasses}><div></div><div></div></div>
+          <div className={buttonClasses}>
             <button onClick={this._buttonHandler}>UPLOAD</button>
           </div>
         </div>

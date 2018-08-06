@@ -30,6 +30,7 @@ class App extends Component {
 
   _bluredBackgroundHandler() {
     this.setState({ modalOpen: false });
+    this.setState({ needRefresh: true });
   }
 
   _dragToggler() {
@@ -68,7 +69,7 @@ class App extends Component {
             changePageStatus={this._changePageStatus}
           />
           <Trash dragging={this.state.dragging} drop={this._dropHandler} />
-          <UploadModal opened={this.state.modalOpen}/>
+          <UploadModal close={this._bluredBackgroundHandler} opened={this.state.modalOpen}/>
         </main>
       </div>
     );
