@@ -30,6 +30,7 @@ class Gallery extends React.Component {
   }
 
   _fetchImages() {
+    const { changePageStatus } = this.props;
     fetch(`${process.env.REACT_APP_URL}/api/v1/images`, {
       method: 'GET',
       crossDomain: true,
@@ -41,6 +42,7 @@ class Gallery extends React.Component {
       .then(data => {
         this.setState({ images: data });
         this.setState({ loading: false });
+        changePageStatus();
       });
   }
 
@@ -61,10 +63,10 @@ class Gallery extends React.Component {
 
     return (
       <div className="gallery__row">
-        {columns.map(column => (
-          <div className="gallery__column" key={column}>
-            {column.map(img => (<img
-              key={img}
+        {columns.map((column, i) => (
+          <div className="gallery__column" key={i}>
+            {column.map((img, i) => (<img
+              key={i}
               draggable="true"
               alt={img.name}
               data-id={img.id}
@@ -81,13 +83,10 @@ class Gallery extends React.Component {
 
   render() {
     const { loading } = this.state;
-    const { needRefresh, changePageStatus } = this.props;
+    const { needRefresh } = this.props;
     const images = loading ? this._renderSpinner() : this._renderImages();
 
-    if (needRefresh) {
-      this._fetchImages();
-      changePageStatus();
-    }
+    if (needRefresh) this._fetchImages();
 
     return (
       <div className="gallery">
