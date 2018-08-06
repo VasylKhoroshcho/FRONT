@@ -64,9 +64,9 @@ class Gallery extends React.Component {
     return (
       <div className="gallery__row">
         {columns.map((column, i) => (
-          <div className="gallery__column" key={i}>
-            {column.map((img, i) => (<img
-              key={i}
+          <div className="gallery__column" key={`column-${i}`}>
+            {column.map((img, j) => (<img
+              key={`row-${j}`}
               draggable="true"
               alt={img.name}
               data-id={img.id}
