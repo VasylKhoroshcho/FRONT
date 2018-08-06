@@ -13,7 +13,7 @@ You will need the following things properly installed on your computer.
 
 ## Deployment strategy
 
-* [Travis](https://travis-ci.org/VasylKhoroshcho/API)
+* [Travis](https://travis-ci.org/VasylKhoroshcho/FRONT)
 
 ## Installation
 
@@ -22,7 +22,7 @@ You will need the following things properly installed on your computer.
 
 ## Add env variables
 
-* `export API_URL=API_URL=127.0.0.1:1437`
+* `export API_URL=127.0.0.1:1437`
 
 ## Running / Development
 

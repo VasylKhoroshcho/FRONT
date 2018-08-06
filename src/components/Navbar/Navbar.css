@@ -55,9 +55,3 @@
     background-color: #b7262c;
     color: white;
 }
-
-@media(max-width: 768px) {
-  .navbar_navigation-items {
-    display: none;
-  }
-}
