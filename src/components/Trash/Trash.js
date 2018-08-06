@@ -10,19 +10,20 @@ class Trash extends Component {
   }
 
   render() {
-    let classes = this.props.dragging ? 'trash active' : 'trash';
+    const { dragging, drop } = this.props;
+    const classes = dragging ? 'trash active' : 'trash';
 
     return (
       <div className={classes}>
         <img
           src={trashIcon}
-          alt='icon'
+          alt="icon"
           onDragOver={e => this._allowDrop(e)}
-          onDrop={this.props.drop}
+          onDrop={drop}
         />
       </div>
     );
   }
-};
+}
 
 export default Trash;

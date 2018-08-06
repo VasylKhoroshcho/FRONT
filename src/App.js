@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 
 import './App.css';
 
-import Trash from './components/Trash/Trash'
-import Navbar from './components/Navbar/Navbar'
-import Gallery from './components/Gallery/Gallery'
-import UploadModal from './components/UploadModal/UploadModal'
-import BluredBackground from './components/BluredBackground/BluredBackground'
+import Trash from './components/Trash/Trash';
+import Navbar from './components/Navbar/Navbar';
+import Gallery from './components/Gallery/Gallery';
+import UploadModal from './components/UploadModal/UploadModal';
+import BluredBackground from './components/BluredBackground/BluredBackground';
 
 class App extends Component {
   constructor(props) {
@@ -17,11 +17,11 @@ class App extends Component {
       dragging: false
     };
 
-    this._dropHandler = this._dropHandler.bind(this)
-    this._dragToggler = this._dragToggler.bind(this)
-    this._changePageStatus = this._changePageStatus.bind(this)
-    this._toggleSidebarHandler = this._toggleSidebarHandler.bind(this)
-    this._bluredBackgroundHandler = this._bluredBackgroundHandler.bind(this)
+    this._dropHandler = this._dropHandler.bind(this);
+    this._dragToggler = this._dragToggler.bind(this);
+    this._changePageStatus = this._changePageStatus.bind(this);
+    this._toggleSidebarHandler = this._toggleSidebarHandler.bind(this);
+    this._bluredBackgroundHandler = this._bluredBackgroundHandler.bind(this);
   }
 
   _toggleSidebarHandler() {
@@ -38,24 +38,26 @@ class App extends Component {
   }
 
   _dropHandler(e) {
-    fetch(`${process.env.REACT_APP_URL}/api/v1/delete?id=${e.dataTransfer.getData("id")}`, {
+    fetch(`${process.env.REACT_APP_URL}/api/v1/delete?id=${e.dataTransfer.getData('id')}`, {
       method: 'DELETE',
-      crossDomain:true,
+      crossDomain: true,
       headers: {
-          'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
       }
     })
-    .then(response => response.json())
-    .then(data => this.setState({needRefresh: true}));
+      .then(() => this.setState({ needRefresh: true }));
   }
 
   _changePageStatus() {
-    this.setState({needRefresh: false})
+    this.setState({ needRefresh: false });
   }
 
   render() {
-    if (this.state.modalOpen) {
-      var bluredBackground = <BluredBackground  click={this._bluredBackgroundHandler} />
+    const { modalOpen, needRefresh, dragging } = this.state;
+    let bluredBackground;
+
+    if (modalOpen) {
+      bluredBackground = <BluredBackground click={this._bluredBackgroundHandler} />;
     }
 
     return (
@@ -65,11 +67,11 @@ class App extends Component {
         <main>
           <Gallery
             dragToggler={this._dragToggler}
-            needRefresh={this.state.needRefresh}
+            needRefresh={needRefresh}
             changePageStatus={this._changePageStatus}
           />
-          <Trash dragging={this.state.dragging} drop={this._dropHandler} />
-          <UploadModal close={this._bluredBackgroundHandler} opened={this.state.modalOpen}/>
+          <Trash dragging={dragging} drop={this._dropHandler} />
+          <UploadModal close={this._bluredBackgroundHandler} opened={modalOpen} />
         </main>
       </div>
     );

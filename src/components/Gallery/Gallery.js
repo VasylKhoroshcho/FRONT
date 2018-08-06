@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 import './Spiner.css';
 import './Gallery.css';
@@ -16,71 +16,84 @@ class Gallery extends React.Component {
     this._fetchImages();
   }
 
-  _fetchImages() {
-    fetch(`${process.env.REACT_APP_URL}/api/v1/images`, {
-      method: 'GET',
-      crossDomain:true,
-      headers: {
-          'Content-Type': 'application/json'
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      this.setState({ images: data })
-      this.setState({ loading: false });
-    });
+  _renderSpinner() {
+    return (
+      <div className="gallery__spinner">
+        <div />
+        <div />
+      </div>
+    );
   }
 
   _dragStart(e) {
-    e.dataTransfer.setData("id", e.target.dataset.id);
+    e.dataTransfer.setData('id', e.target.dataset.id);
   }
 
-  _renderSpinner() {
-    return <div className="gallery__spinner"><div></div><div></div></div>;
+  _fetchImages() {
+    fetch(`${process.env.REACT_APP_URL}/api/v1/images`, {
+      method: 'GET',
+      crossDomain: true,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ images: data });
+        this.setState({ loading: false });
+      });
   }
 
   _renderImages() {
-    let columns = [[], [], [], []];
+    const columns = [[], [], [], []];
+    const { images } = this.state;
+    const { dragToggler } = this.props;
 
-    this.state.images.reduce((place, image) => {
-      let result = place + 1;
+    images.reduce((place, image) => {
+      const result = place + 1;
 
       columns[place].push(image);
 
       if (result > 3) return 0;
 
       return result;
-    }, 0)
+    }, 0);
 
     return (
       <div className="gallery__row">
-        {columns.map(column =>
-          <div className="gallery__column">
-            {column.map(img =>
-              <img
-                draggable="true"
-                alt={img.name}
-                data-id={img.id}
-                onDragStart={e => { this._dragStart(e); this.props.dragToggler()}}
-                onDragEnd={e => this.props.dragToggler()}
-                src={img.url}
-              />
-            )}
+        {columns.map(column => (
+          <div className="gallery__column" key={column}>
+            {column.map(img => (<img
+              key={img}
+              draggable="true"
+              alt={img.name}
+              data-id={img.id}
+              onDragStart={e => { this._dragStart(e); dragToggler(); }}
+              onDragEnd={() => dragToggler()}
+              src={img.url}
+            />
+            ))}
           </div>
-        )}
+        ))}
       </div>
     );
   }
 
   render() {
-    let images = this.state.loading ? this._renderSpinner() : this._renderImages();
+    const { loading } = this.state;
+    const { needRefresh, changePageStatus } = this.props;
+    const images = loading ? this._renderSpinner() : this._renderImages();
 
-    if(this.props.needRefresh) {
+    if (needRefresh) {
       this._fetchImages();
-      this.props.changePageStatus();
+      changePageStatus();
     }
 
-    return (<div className="gallery">{images}</div>);
+    return (
+      <div className="gallery">
+        {images}
+      </div>
+    );
   }
 }
 
